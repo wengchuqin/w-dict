@@ -2,7 +2,6 @@ package top.chuqin.wdict;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -13,6 +12,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.parser.Feature;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -23,7 +24,9 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 import org.junit.Test;
-import top.chuqin.wdict.domian.dataobject.TranslateResult;
+import top.chuqin.wdict.domian.dataobject.En2ZhResult;
+import top.chuqin.wdict.domian.dataobject.TranslateResultBase;
+import top.chuqin.wdict.domian.dataobject.Zh2EnResult;
 
 public class YoudaoTest {
     String appKey = "4c41d30589a6f769";
@@ -44,10 +47,11 @@ public class YoudaoTest {
         params.put("sign", sign);
         params.put("salt", salt);
         params.put("appKey", appKey);
-        System.out.println(requestForHttp("http://openapi.youdao.com/api", params));
+        String resultStr = requestForHttp("http://openapi.youdao.com/api", params);
 
-        TranslateResult translateResult = JSON.parseObject(requestForHttp("http://openapi.youdao.com/api", params), TranslateResult.class);
-        System.out.println(translateResult);
+        System.out.println("result:" + resultStr);
+        Zh2EnResult result = JSON.parseObject(requestForHttp("http://openapi.youdao.com/api", params), Zh2EnResult.class);
+        System.out.println(result);
     }
 
     @Test
@@ -64,10 +68,10 @@ public class YoudaoTest {
         params.put("sign", sign);
         params.put("salt", salt);
         params.put("appKey", appKey);
-        System.out.println(requestForHttp("http://openapi.youdao.com/api", params));
+        System.out.println("result:" + requestForHttp("http://openapi.youdao.com/api", params));
 
-        TranslateResult translateResult = JSON.parseObject(requestForHttp("http://openapi.youdao.com/api", params), TranslateResult.class);
-        System.out.println(translateResult);
+        En2ZhResult en2ZhResult = JSON.parseObject(requestForHttp("http://openapi.youdao.com/api", params), En2ZhResult.class);
+        System.out.println(en2ZhResult);
     }
 
 
