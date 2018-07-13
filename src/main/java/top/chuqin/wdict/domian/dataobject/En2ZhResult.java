@@ -3,10 +3,10 @@ package top.chuqin.wdict.domian.dataobject;
 import java.util.Arrays;
 import java.util.Objects;
 
-public class En2ZhResult extends TranslateResultBase{
+public class En2ZhResult extends TranslateResultBase {
     private Zh2EnBase base;
 
-    public static class Zh2EnBase{
+    public static class Zh2EnBase {
         /**
          * 基本释义
          */
@@ -73,6 +73,6 @@ public class En2ZhResult extends TranslateResultBase{
     public String toString() {
         return "En2ZhResult{" +
                 "base=" + base +
-                '}';
+                "} " + super.toString();
     }
 }

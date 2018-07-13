@@ -34,6 +34,36 @@ public class YoudaoTest {
 
 
     @Test
+    public void test(){
+        String jsonStr = "{\"tSpeakUrl\":\"http://openapi.youdao.com/ttsapi?q=%E4%BD%A0%E5%A5%BD&langType=zh-CHS&sign=9040D7C6204222D297680E460D1E3E79&salt=1531456789851&voice=4&format=mp3&appKey=4c41d30589a6f769\",\"web\":[{\"value\":[\"你好\",\"您好\",\"hello\"],\"key\":\"Hello\"},{\"value\":[\"凯蒂猫\",\"昵称\",\"匿称\"],\"key\":\"Hello Kitty\"},{\"value\":[\"哈乐哈乐\",\"乐扣乐扣\"],\"key\":\"Hello Bebe\"}],\"query\":\"hello\",\"translation\":[\"你好\"],\"errorCode\":\"0\",\"dict\":{\"url\":\"yddict://m.youdao.com/dict?le=eng&q=hello\"},\"webdict\":{\"url\":\"http://m.youdao.com/dict?le=eng&q=hello\"},\"basic\":{\"us-phonetic\":\"helˈō\",\"phonetic\":\"həˈləʊ\",\"uk-phonetic\":\"həˈləʊ\",\"uk-speech\":\"http://openapi.youdao.com/ttsapi?q=hello&langType=en&sign=85CC13DCDA23CBEC874612E544FD232C&salt=1531456789851&voice=5&format=mp3&appKey=4c41d30589a6f769\",\"explains\":[\"n. 表示问候， 惊奇或唤起注意时的用语\",\"int. 喂；哈罗\",\"n. (Hello)人名；(法)埃洛\"],\"us-speech\":\"http://openapi.youdao.com/ttsapi?q=hello&langType=en&sign=85CC13DCDA23CBEC874612E544FD232C&salt=1531456789851&voice=6&format=mp3&appKey=4c41d30589a6f769\"},\"l\":\"EN2zh-CHS\",\"speakUrl\":\"http://openapi.youdao.com/ttsapi?q=hello&langType=en&sign=85CC13DCDA23CBEC874612E544FD232C&salt=1531456789851&voice=4&format=mp3&appKey=4c41d30589a6f769\"}";
+        System.out.println("jsonStr: " + jsonStr);
+        Zh2EnResult result = JSON.parseObject(jsonStr, Zh2EnResult.class);
+        System.out.println(result);
+    }
+
+
+    @Test
+    public void testToString(){
+        Zh2EnResult result = new Zh2EnResult();
+        result.setErrorCode("100");
+        Zh2EnResult.Zh2EnBase zh2EnBase = new Zh2EnResult.Zh2EnBase();
+        zh2EnBase.setPhonetic("Phonetic");
+        result.setBase(zh2EnBase);
+        System.out.println(JSON.toJSON(result));
+    }
+
+
+    @Test
+    public void testParse(){
+        String jsonStr = "{\"errorCode\":\"100\",\"base\":{\"phonetic\":\"Phonetic\"}}";
+        System.out.println("jsonStr: " + jsonStr);
+        Zh2EnResult result = JSON.parseObject(jsonStr, Zh2EnResult.class);
+        System.out.println(result);
+    }
+
+
+
+    @Test
     public void testZhToEn() throws Exception {
         String query = "你好";
         String salt = String.valueOf(System.currentTimeMillis());

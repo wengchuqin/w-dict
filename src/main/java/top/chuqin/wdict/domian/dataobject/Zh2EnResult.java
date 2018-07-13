@@ -151,7 +151,7 @@ public class Zh2EnResult extends TranslateResultBase{
     public String toString() {
         return "Zh2EnResult{" +
                 "base=" + base +
-                '}';
+                "} " + super.toString();
     }
 }
 
