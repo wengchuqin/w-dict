@@ -1,177 +1,29 @@
 package top.chuqin.wdict;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.parser.Feature;
-import com.alibaba.fastjson.serializer.SerializerFeature;
-import org.apache.http.HttpEntity;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.util.EntityUtils;
-import org.json.JSONObject;
+import org.junit.Assert;
 import org.junit.Test;
 import top.chuqin.wdict.domian.dataobject.En2ZhResult;
-import top.chuqin.wdict.domian.dataobject.TranslateResultBase;
 import top.chuqin.wdict.domian.dataobject.Zh2EnResult;
+import top.chuqin.wdict.service.TranslateService;
+import top.chuqin.wdict.service.impl.TranslateServiceImpl;
 
 public class YoudaoTest {
-    String appKey = "4c41d30589a6f769";
-    String appSecret = "NmqUoQN03LYhV9Syiaix0L3fRalXj6vB";
-
-
-    @Test
-    public void test(){
-        String jsonStr = "{\"tSpeakUrl\":\"http://openapi.youdao.com/ttsapi?q=%E4%BD%A0%E5%A5%BD&langType=zh-CHS&sign=9040D7C6204222D297680E460D1E3E79&salt=1531456789851&voice=4&format=mp3&appKey=4c41d30589a6f769\",\"web\":[{\"value\":[\"你好\",\"您好\",\"hello\"],\"key\":\"Hello\"},{\"value\":[\"凯蒂猫\",\"昵称\",\"匿称\"],\"key\":\"Hello Kitty\"},{\"value\":[\"哈乐哈乐\",\"乐扣乐扣\"],\"key\":\"Hello Bebe\"}],\"query\":\"hello\",\"translation\":[\"你好\"],\"errorCode\":\"0\",\"dict\":{\"url\":\"yddict://m.youdao.com/dict?le=eng&q=hello\"},\"webdict\":{\"url\":\"http://m.youdao.com/dict?le=eng&q=hello\"},\"basic\":{\"us-phonetic\":\"helˈō\",\"phonetic\":\"həˈləʊ\",\"uk-phonetic\":\"həˈləʊ\",\"uk-speech\":\"http://openapi.youdao.com/ttsapi?q=hello&langType=en&sign=85CC13DCDA23CBEC874612E544FD232C&salt=1531456789851&voice=5&format=mp3&appKey=4c41d30589a6f769\",\"explains\":[\"n. 表示问候， 惊奇或唤起注意时的用语\",\"int. 喂；哈罗\",\"n. (Hello)人名；(法)埃洛\"],\"us-speech\":\"http://openapi.youdao.com/ttsapi?q=hello&langType=en&sign=85CC13DCDA23CBEC874612E544FD232C&salt=1531456789851&voice=6&format=mp3&appKey=4c41d30589a6f769\"},\"l\":\"EN2zh-CHS\",\"speakUrl\":\"http://openapi.youdao.com/ttsapi?q=hello&langType=en&sign=85CC13DCDA23CBEC874612E544FD232C&salt=1531456789851&voice=4&format=mp3&appKey=4c41d30589a6f769\"}";
-        System.out.println("jsonStr: " + jsonStr);
-        Zh2EnResult result = JSON.parseObject(jsonStr, Zh2EnResult.class);
-        System.out.println(result);
-    }
-
-
-    @Test
-    public void testToString(){
-        Zh2EnResult result = new Zh2EnResult();
-        result.setErrorCode("100");
-        Zh2EnResult.Zh2EnBase zh2EnBase = new Zh2EnResult.Zh2EnBase();
-        zh2EnBase.setPhonetic("Phonetic");
-        result.setBase(zh2EnBase);
-        System.out.println(JSON.toJSON(result));
-    }
-
-
-    @Test
-    public void testParse(){
-        String jsonStr = "{\"errorCode\":\"100\",\"base\":{\"phonetic\":\"Phonetic\"}}";
-        System.out.println("jsonStr: " + jsonStr);
-        Zh2EnResult result = JSON.parseObject(jsonStr, Zh2EnResult.class);
-        System.out.println(result);
-    }
-
+    TranslateService dictService = new TranslateServiceImpl();
 
 
     @Test
     public void testZhToEn() throws Exception {
-        String query = "你好";
-        String salt = String.valueOf(System.currentTimeMillis());
-        String from = "zh-CHS";
-        String to = "EN";
-        String sign = md5(appKey + query + salt + appSecret);
-        Map<String, String> params = new HashMap();
-        params.put("q", query);
-        params.put("from", from);
-        params.put("to", to);
-        params.put("sign", sign);
-        params.put("salt", salt);
-        params.put("appKey", appKey);
-        String resultStr = requestForHttp("http://openapi.youdao.com/api", params);
-
-        System.out.println("result:" + resultStr);
-        Zh2EnResult result = JSON.parseObject(requestForHttp("http://openapi.youdao.com/api", params), Zh2EnResult.class);
+        En2ZhResult result = dictService.en2Zh("hello");
         System.out.println(result);
+        Assert.assertEquals("hello", result.getQuery());
     }
 
     @Test
     public void testEnToCh() throws Exception {
-        String query = "hello";
-        String salt = String.valueOf(System.currentTimeMillis());
-        String from = "EN";
-        String to = "zh-CHS";
-        String sign = md5(appKey + query + salt + appSecret);
-        Map<String, String> params = new HashMap();
-        params.put("q", query);
-        params.put("from", from);
-        params.put("to", to);
-        params.put("sign", sign);
-        params.put("salt", salt);
-        params.put("appKey", appKey);
-        System.out.println("result:" + requestForHttp("http://openapi.youdao.com/api", params));
-
-        En2ZhResult en2ZhResult = JSON.parseObject(requestForHttp("http://openapi.youdao.com/api", params), En2ZhResult.class);
-        System.out.println(en2ZhResult);
+        Zh2EnResult result = dictService.zh2En("你好");
+        System.out.println(result);
+        Assert.assertEquals("你好", result.getQuery());
     }
 
 
-    public String requestForHttp(String url, Map requestParams) throws Exception {
-        String result = null;
-        CloseableHttpClient httpClient = HttpClients.createDefault();
-        /**HttpPost*/
-        HttpPost httpPost = new HttpPost(url);
-        System.out.println(new JSONObject(requestParams).toString());
-        List<BasicNameValuePair> params = new ArrayList();
-        Iterator<Entry<String, String>> it = requestParams.entrySet().iterator();
-        while (it.hasNext()) {
-            Entry<String, String> en = it.next();
-            String key = en.getKey();
-            String value = en.getValue();
-            if (value != null) {
-                params.add(new BasicNameValuePair(key, value));
-            }
-        }
-        httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
-        /**HttpResponse*/
-        CloseableHttpResponse httpResponse = httpClient.execute(httpPost);
-        try {
-            HttpEntity httpEntity = httpResponse.getEntity();
-            result = EntityUtils.toString(httpEntity, "utf-8");
-            EntityUtils.consume(httpEntity);
-        } finally {
-            try {
-                if (httpResponse != null) {
-                    httpResponse.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return result;
-    }
-
-    /**
-     * 生成32位MD5摘要
-     *
-     * @param string
-     * @return
-     */
-    public String md5(String string) {
-        if (string == null) {
-            return null;
-        }
-        char hexDigits[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-                'A', 'B', 'C', 'D', 'E', 'F'};
-
-        try {
-            byte[] btInput = string.getBytes("utf-8");
-            /** 获得MD5摘要算法的 MessageDigest 对象 */
-            MessageDigest mdInst = MessageDigest.getInstance("MD5");
-            /** 使用指定的字节更新摘要 */
-            mdInst.update(btInput);
-            /** 获得密文 */
-            byte[] md = mdInst.digest();
-            /** 把密文转换成十六进制的字符串形式 */
-            int j = md.length;
-            char str[] = new char[j * 2];
-            int k = 0;
-            for (byte byte0 : md) {
-                str[k++] = hexDigits[byte0 >>> 4 & 0xf];
-                str[k++] = hexDigits[byte0 & 0xf];
-            }
-            return new String(str);
-        } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
-            return null;
-        }
-    }
 }

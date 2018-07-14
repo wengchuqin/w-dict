@@ -1,5 +1,8 @@
 package top.chuqin.wdict.domian.dataobject;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.annotation.JSONField;
+
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -22,11 +25,12 @@ public class TranslateResultBase {
     /**
      * 词义 网络释义，该结果不一定存在
      */
-    private String web;
+    private Pair[] web;
 
     /**
      * 源语言和目标语言 一定存在
      */
+    @JSONField(alternateNames = {"l"})
     private String type;
 
     /**
@@ -66,11 +70,11 @@ public class TranslateResultBase {
         this.translations = translations;
     }
 
-    public String getWeb() {
+    public Pair[] getWeb() {
         return web;
     }
 
-    public void setWeb(String web) {
+    public void setWeb(Pair[] web) {
         this.web = web;
     }
 
@@ -122,14 +126,6 @@ public class TranslateResultBase {
 
     @Override
     public String toString() {
-        return "TranslateResultBase{" +
-                "errorCode='" + errorCode + '\'' +
-                ", query='" + query + '\'' +
-                ", translations=" + Arrays.toString(translations) +
-                ", web='" + web + '\'' +
-                ", type='" + type + '\'' +
-                ", tSpeakUrl='" + tSpeakUrl + '\'' +
-                ", speakUrl='" + speakUrl + '\'' +
-                '}';
+        return JSON.toJSONString(this);
     }
 }

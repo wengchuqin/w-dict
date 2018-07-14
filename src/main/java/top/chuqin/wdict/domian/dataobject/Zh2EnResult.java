@@ -1,12 +1,14 @@
 package top.chuqin.wdict.domian.dataobject;
 
+import com.alibaba.fastjson.JSON;
+
 import java.util.Arrays;
 import java.util.Objects;
 
-public class Zh2EnResult extends TranslateResultBase{
-    private Zh2EnBase base;
+public class Zh2EnResult extends TranslateResultBase {
+    private Zh2EnBasic basic;
 
-    public static class Zh2EnBase{
+    public static class Zh2EnBasic {
         /**
          * 默认音标，默认是英式音标，英文查词成功，一定存在
          */
@@ -37,7 +39,7 @@ public class Zh2EnResult extends TranslateResultBase{
          */
         private String[] explains;
 
-        public Zh2EnBase() {
+        public Zh2EnBasic() {
         }
 
         public String getPhonetic() {
@@ -92,13 +94,13 @@ public class Zh2EnResult extends TranslateResultBase{
         public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
-            Zh2EnBase zh2EnBase = (Zh2EnBase) o;
-            return Objects.equals(phonetic, zh2EnBase.phonetic) &&
-                    Objects.equals(usPhonetic, zh2EnBase.usPhonetic) &&
-                    Objects.equals(usSpeech, zh2EnBase.usSpeech) &&
-                    Objects.equals(ukPhonetic, zh2EnBase.ukPhonetic) &&
-                    Objects.equals(ukSpeech, zh2EnBase.ukSpeech) &&
-                    Arrays.equals(explains, zh2EnBase.explains);
+            Zh2EnBasic zh2EnBasic = (Zh2EnBasic) o;
+            return Objects.equals(phonetic, zh2EnBasic.phonetic) &&
+                    Objects.equals(usPhonetic, zh2EnBasic.usPhonetic) &&
+                    Objects.equals(usSpeech, zh2EnBasic.usSpeech) &&
+                    Objects.equals(ukPhonetic, zh2EnBasic.ukPhonetic) &&
+                    Objects.equals(ukSpeech, zh2EnBasic.ukSpeech) &&
+                    Arrays.equals(explains, zh2EnBasic.explains);
         }
 
         @Override
@@ -111,7 +113,7 @@ public class Zh2EnResult extends TranslateResultBase{
 
         @Override
         public String toString() {
-            return "Zh2EnBase{" +
+            return "Zh2EnBasic{" +
                     "phonetic='" + phonetic + '\'' +
                     ", usPhonetic='" + usPhonetic + '\'' +
                     ", usSpeech='" + usSpeech + '\'' +
@@ -125,12 +127,12 @@ public class Zh2EnResult extends TranslateResultBase{
     public Zh2EnResult() {
     }
 
-    public Zh2EnBase getBase() {
-        return base;
+    public Zh2EnBasic getBasic() {
+        return basic;
     }
 
-    public void setBase(Zh2EnBase base) {
-        this.base = base;
+    public void setBasic(Zh2EnBasic basic) {
+        this.basic = basic;
     }
 
     @Override
@@ -138,20 +140,18 @@ public class Zh2EnResult extends TranslateResultBase{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Zh2EnResult that = (Zh2EnResult) o;
-        return Objects.equals(base, that.base);
+        return Objects.equals(basic, that.basic);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(base);
+        return Objects.hash(basic);
     }
 
     @Override
     public String toString() {
-        return "Zh2EnResult{" +
-                "base=" + base +
-                "} " + super.toString();
+        return JSON.toJSONString(this);
     }
 }
 
